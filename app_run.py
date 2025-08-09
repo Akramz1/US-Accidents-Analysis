@@ -4,17 +4,17 @@ from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 import numpy as np
 
-# Load data
-df = pd.read_csv('data.csv')
 
-# Ensure numeric columns are correctly typed
+df = pd.read_csv('US_Accidents(2016-2025)\data.csv')
+
+
 numerical_cols = df.select_dtypes(include=[np.number]).columns
 corr_df = df[numerical_cols].corr()
 
-# App setup
+
 app = Dash(__name__)
 
-# Create heatmap figure once to improve performance, as it's static
+
 heatmap_fig = px.imshow(
     corr_df,
     text_auto=True,
@@ -48,9 +48,7 @@ app.layout = html.Div(style={
         style={'marginBottom': '20px'}
     ),
 
-    # Grid layout for charts
     html.Div([
-        # Row 1: Heatmap and Weather Pie
         html.Div([
             html.Div(dcc.Graph(id="heatmap", figure=heatmap_fig),
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
@@ -58,13 +56,11 @@ app.layout = html.Div(style={
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'gap': '20px', 'marginBottom': '20px'}),
 
-        # Row 2: Map (full width)
         html.Div([
             html.Div(dcc.Graph(id='cities_map_chart'),
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'marginBottom': '20px'}),
 
-        # Row 3: Top Cities and Accidents over Time
         html.Div([
             html.Div(dcc.Graph(id='cities_with_most_accidents'),
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
@@ -72,7 +68,6 @@ app.layout = html.Div(style={
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'gap': '20px', 'marginBottom': '20px'}),
 
-        # Row 4: Severity vs Weather and Severity vs Time Elapsed
         html.Div([
             html.Div(dcc.Graph(id='severity_with_weather'),
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
@@ -80,7 +75,7 @@ app.layout = html.Div(style={
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'gap': '20px', 'marginBottom': '20px'}),
 
-        # Row 5: Pressure vs Wind and Temp vs Humidity
+
         html.Div([
             html.Div(dcc.Graph(id='pressure_vs_wind_chart'),
                      style={'flex': 1, 'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '5px', 'boxShadow': '0 2px 4px rgba(0,0,0,0.05)'}),
@@ -91,7 +86,6 @@ app.layout = html.Div(style={
 ])
 
 
-# Functions
 def update_map_chart(time_of_day):
     filtered = df[df["Time_of_Day"] == time_of_day]
     state_counts = filtered.groupby(
